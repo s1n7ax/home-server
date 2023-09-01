@@ -1,0 +1,35 @@
+version: "3.8"
+
+volumes:
+  nextcloud:
+  db:
+
+services:
+  db:
+    image: postgres:alpine
+    container_name: postgres_for_nextcloud
+    restart: always
+    volumes:
+      - db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: nextcloud
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+  app:
+    image: nextcloud:latest
+    container_name: nextcloud
+    restart: always
+    ports:
+      - 8080:80
+    links:
+      - db
+    volumes:
+      - nextcloud:/var/www/html
+      # docker on orange pi does not use host conf for containers
+      # for some reason
+      - /etc/resolv.conf:/etc/resolv.conf
+    environment:
+      - POSTGRES_HOST=db
+      - POSTGRES_DB=nextcloud
+      - POSTGRES_USER=nextcloud
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}

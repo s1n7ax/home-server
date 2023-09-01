@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  sharedrop:
+    image: linuxserver/snapdrop:arm64v8-latest
+    container_name: snapdrop
+    restart: always
+    ports:
+      - 3000:80
+    volumes:
+      - sharedrop:/config
