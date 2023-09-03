@@ -1,0 +1,22 @@
+version: "3.8"
+
+volumes:
+  config:
+
+services:
+  jellyfin:
+    image: linuxserver/jellyfin:arm64v8-latest
+    container_name: jellyfin
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - config:/config
+      - /media/devmon/sda1-usb-TOSHIBA_MQ01ABF0/Torrent/Downloaded/TV:/data/tvshows
+      - /media/devmon/sda1-usb-TOSHIBA_MQ01ABF0/Torrent/Downloaded/Movies:/data/movies
+    devices:
+      - /dev/dri:/dev/dri
+    ports:
+      - 8000:8096
