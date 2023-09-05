@@ -15,7 +15,7 @@ services:
       - WEBUI_PORT=8001
     volumes:
       - config:/config
-      - /media/devmon/sda1-usb-TOSHIBA_MQ01ABF0/Torrent:/downloads
+      - /media/devmon/sda1-usb-WDC_WD10_JPVT-75/Torrent:/downloads
     ports:
       - 8001:8001
       - 6881:6881
