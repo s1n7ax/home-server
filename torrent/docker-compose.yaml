@@ -1,0 +1,68 @@
+version: "3.8"
+
+volumes:
+  qbittorrent-config:
+  radarr-config:
+  sonarr-config:
+  prowlarr-config:
+
+services:
+  prowlarr:
+    image: linuxserver/prowlarr:arm64v8-latest
+    container_name: prowlarr
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - prowlarr-config:/config
+    ports:
+      - 9696:9696
+
+  radarr:
+    image: linuxserver/radarr:arm64v8-latest
+    container_name: radarr
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - radarr-config:/config
+      - /media/devmon/sda1-usb-WDC_WD10_JPVT-75/Torrent/Movies:/movies
+      - /media/devmon/sda1-usb-WDC_WD10_JPVT-75/Torrent/Downloaded:/downloads
+    ports:
+      - 7878:7878
+
+  sonarr:
+    image: linuxserver/sonarr:arm64v8-latest
+    container_name: sonarr
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - sonarr-config:/config
+      - /media/devmon/sda1-usb-WDC_WD10_JPVT-75/Torrent/TV:/tv
+      - /media/devmon/sda1-usb-WDC_WD10_JPVT-75/Torrent/Downloaded:/downloads
+    ports:
+      - 8989:8989
+
+  qbittorrent:
+    image: linuxserver/qbittorrent:arm64v8-latest
+    container_name: qbittorrent
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - WEBUI_PORT=8001
+    volumes:
+      - qbittorrent-config:/config
+      - /media/devmon/sda1-usb-WDC_WD10_JPVT-75/Torrent:/downloads
+    ports:
+      - 8001:8001
+      - 6881:6881
+      - 6881:6881/udp
