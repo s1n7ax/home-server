@@ -30,8 +30,8 @@ services:
       - TZ=Etc/UTC
     volumes:
       - radarr-config:/config
-      - /media/devmon/sda1-usb-WDC_WD10_JPVT-75/Torrent/Movies:/movies
-      - /media/devmon/sda1-usb-WDC_WD10_JPVT-75/Torrent/Downloaded:/downloads
+      - /media/orangepi/torrent-drive/Torrent/Movies:/movies
+      - /media/orangepi/torrent-drive/Torrent/Downloaded:/downloads/Downloaded
     ports:
       - 7878:7878
 
@@ -45,8 +45,8 @@ services:
       - TZ=Etc/UTC
     volumes:
       - sonarr-config:/config
-      - /media/devmon/sda1-usb-WDC_WD10_JPVT-75/Torrent/TV:/tv
-      - /media/devmon/sda1-usb-WDC_WD10_JPVT-75/Torrent/Downloaded:/downloads
+      - /media/orangepi/torrent-drive/Torrent/TV:/tv
+      - /media/orangepi/torrent-drive/Torrent/Downloaded:/downloads/Downloaded
     ports:
       - 8989:8989
 
@@ -61,7 +61,7 @@ services:
       - WEBUI_PORT=8001
     volumes:
       - qbittorrent-config:/config
-      - /media/devmon/sda1-usb-WDC_WD10_JPVT-75/Torrent:/downloads
+      - /media/orangepi/torrent-drive/Torrent:/downloads
     ports:
       - 8001:8001
       - 6881:6881
