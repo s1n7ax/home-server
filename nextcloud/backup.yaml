@@ -1,0 +1,35 @@
+version: "3.8"
+
+volumes:
+  nextcloud:
+  db:
+
+services:
+  backup:
+    image: alpine:latest
+    container_name: firefox-backup
+    volumes:
+      - ./backup:/backup
+      - db:/var/lib/postgresql/data
+      - nextcloud:/var/www/html
+    command: sh -c '
+      apk add xz;
+
+      XZ_OPT=-9 tar -vJcf /backup/postgresql.tar.xz -C /var/lib/postgresql/data ./;
+      XZ_OPT=-9 tar -vJcf /backup/nextcloud.tar.xz -C /var/www/html ./;
+      '
+
+  restore:
+    image: busybox:latest
+    container_name: firefox-restore
+    volumes:
+      - ./backup:/backup
+      - db:/var/lib/postgresql/data
+      - nextcloud:/var/www/html
+    command: sh -c '
+      rm -rf /var/lib/postgresql/data/* /var/lib/postgresql/data/.[!.]*;
+      rm -rf /var/www/html/* /var/www/html/.[!.]*;
+
+      tar -C /var/lib/postgresql/data -vxJf /backup/postgresql.tar.xz
+      tar -C /var/www/html -vxJf /backup/postgresql.tar.xz
+      '

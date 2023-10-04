@@ -1,0 +1,47 @@
+version: "3.8"
+
+volumes:
+  qbittorrent-config:
+  radarr-config:
+  sonarr-config:
+  prowlarr-config:
+
+services:
+  backup:
+    image: alpine:latest
+    container_name: firefox-backup
+    volumes:
+      - ./backup:/backup
+      - qbittorrent-config:/qbittorrent-config
+      - prowlarr-config:/prowlarr-config
+      - radarr-config:/radarr-config
+      - sonarr-config:/sonarr-config
+    command: sh -c '
+      apk add xz;
+
+      XZ_OPT=-9 tar -vJcf /backup/qbittorrent-config.tar.xz -C /qbittorrent-config ./;
+      XZ_OPT=-9 tar -vJcf /backup/prowlarr-config.tar.xz -C /prowlarr-config ./;
+      XZ_OPT=-9 tar -vJcf /backup/radarr-config.tar.xz -C /radarr-config ./;
+      XZ_OPT=-9 tar -vJcf /backup/sonarr-config.tar.xz -C /sonarr-config ./;
+      '
+
+  restore:
+    image: busybox:latest
+    container_name: firefox-restore
+    volumes:
+      - ./backup:/backup
+      - qbittorrent-config:/qbittorrent-config
+      - prowlarr-config:/prowlarr-config
+      - radarr-config:/radarr-config
+      - sonarr-config:/sonarr-config
+    command: sh -c '
+      rm -rf /qbittorrent-config/* /qbittorrent-config/.[!.]*;
+      rm -rf /prowlarr-config/* /prowlarr-config/.[!.]*;
+      rm -rf /radarr-config/* /radarr-config/.[!.]*;
+      rm -rf /sonarr-config/* /sonarr-config/.[!.]*;
+
+      tar -C /qbittorrent-config -vxJf /backup/qbittorrent-config.tar.xz
+      tar -C /prowlarr-config -vxJf /backup/prowlarr-config.tar.xz
+      tar -C /radarr-config -vxJf /backup/radarr-config.tar.xz
+      tar -C /sonarr-config -vxJf /backup/sonarr-config.tar.xz
+      '

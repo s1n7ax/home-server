@@ -1,0 +1,75 @@
+#!/bin/bash
+
+arg_count=$#
+command_name=$1
+cwd=$PWD
+
+if [ "$arg_count" -lt 0 ]; then
+  echo "Command should be passed to run"
+  echo "Available commands are up, down, backup, restore"
+  exit 1
+fi
+
+command=$1
+
+if [ "$command_name" == "backup" ]; then
+  for dir in */; do
+    full_path="$cwd/$dir"
+    if [ -e "$full_path/backup.yaml" ]; then
+  	  echo "Starting $dir backup"
+  	  cd "$full_path"
+  	  docker-compose \
+  		  -f "$full_path/backup.yaml" \
+  		  run --rm \
+  		  backup \
+  	  && echo "$dir backup completed" &
+    fi
+  done
+  wait
+  echo "Backup is done"
+fi
+
+if [ "$command_name" == "restore" ]; then
+  for dir in */; do
+    full_path="$cwd/$dir"
+    if [ -e "$full_path/backup.yaml" ]; then
+  	  echo "Starting $dir restore"
+  	  cd "$full_path"
+  	  docker-compose \
+  		  -f $full_path/backup.yaml \
+  		  run --rm \
+  		  restore \
+  	  && echo "$dir restore completed" &
+    fi
+  done
+  wait
+  echo "Restoring is done"
+fi
+
+if [ "$command_name" == "up" ]; then
+  for dir in */; do
+    full_path="$cwd/$dir"
+
+    if [ -e "$full_path/docker-compose.yaml" ]; then
+  	  cd "$full_path"
+  	  echo "Starting $dir service"
+      docker-compose up -d
+    fi
+  done
+  wait
+  echo "Starting services is done"
+fi
+
+if [ "$command_name" == "down" ]; then
+  for dir in */; do
+    full_path="$cwd/$dir"
+
+    if [ -e "$full_path/docker-compose.yaml" ]; then
+  	  cd "$full_path"
+  	  echo "Removing $dir service"
+      docker-compose down || true
+    fi
+  done
+  wait
+  echo "Removing services is done"
+fi
