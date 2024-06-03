@@ -1,0 +1,104 @@
+version: "3.8"
+
+services:
+  home-assistant:
+    container_name: HomeAssistant
+    image: "ghcr.io/home-assistant/home-assistant:stable"
+    restart: unless-stopped
+    volumes:
+      - ./data/home-assistant/config:/config
+      - /etc/localtime:/etc/localtime:ro
+      - /run/dbus:/run/dbus:ro
+    devices:
+      - /dev/serial/by-id/usb-Silicon_Labs_Sonoff_Zigbee_3.0_USB_Dongle_Plus_0001-if00-port0
+    privileged: true
+    network_mode: host
+
+  portainer:
+    image: portainer/portainer:linux-arm64-2.0.1
+    container_name: Portainer
+    restart: unless-stopped
+    expose:
+      - 8000
+      - 9000
+    ports:
+      - "9000:9000"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+
+  jellyfin:
+    image: linuxserver/jellyfin:latest
+    container_name: Jellyfin
+    restart: always
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - ./data/jellyfin/config:/config
+      - /home/orangepi/Downloads/Torrent/Movies:/data/movies
+      - /home/orangepi/Downloads/Torrent/TV:/data/tv
+    devices:
+      - /dev/dri:/dev/dri
+    ports:
+      - "8000:8096"
+
+  prowlarr:
+    image: linuxserver/prowlarr:latest
+    container_name: Prowlarr
+    restart: always
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - ./data/prowlarr/config:/config
+    ports:
+      - 9696:9696
+
+  radarr:
+    image: linuxserver/radarr:latest
+    container_name: Radarr
+    restart: always
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - ./data/radarr/config:/config
+      - /home/orangepi/Downloads/Torrent/Movies:/movies
+      - /home/orangepi/Downloads/Torrent/Downloaded:/downloads/Downloaded
+    ports:
+      - 7878:7878
+
+  sonarr:
+    image: linuxserver/sonarr:latest
+    container_name: sonarr
+    restart: always
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - ./data/sonarr/config:/config
+      - /home/orangepi/Downloads/Torrent/TV:/tv
+      - /home/orangepi/Downloads/Torrent/Downloaded:/downloads/Downloaded
+    ports:
+      - 8989:8989
+
+  qbittorrent:
+    image: linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    restart: always
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - WEBUI_PORT=8001
+    volumes:
+      - ./data/qbittorrent/config:/config
+      - /home/orangepi/Downloads/Torrent:/downloads
+    ports:
+      - 8001:8001
+      - 6881:6881
+      - 6881:6881/udp
