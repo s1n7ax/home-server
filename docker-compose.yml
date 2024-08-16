@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   home-assistant:
     container_name: HomeAssistant
@@ -38,6 +36,7 @@ services:
       - ./data/jellyfin/config:/config
       - /home/orangepi/Downloads/Torrent/Movies:/data/movies
       - /home/orangepi/Downloads/Torrent/TV:/data/tv
+      - /home/orangepi/Downloads/Torrent/Music:/data/music
     devices:
       - /dev/dri:/dev/dri
     ports:
@@ -85,6 +84,33 @@ services:
       - /home/orangepi/Downloads/Torrent/Downloaded:/downloads/Downloaded
     ports:
       - 8989:8989
+
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: lidarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - ./data/lidarr/config:/config
+      - /home/orangepi/Downloads/Torrent/Music:/music
+      - /home/orangepi/Downloads/Torrent/Downloaded:/downloads/Downloaded
+    ports:
+      - 8686:8686
+    restart: unless-stopped
+
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - LOG_HTML=${LOG_HTML:-false}
+      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
+      - TZ=Europe/London
+    ports:
+      - "${PORT:-8191}:8191"
+    restart: unless-stopped
 
   qbittorrent:
     image: linuxserver/qbittorrent:latest
