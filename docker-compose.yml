@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   home-assistant:
-    container_name: HomeAssistant
+    container_name: home-assistant
     image: "ghcr.io/home-assistant/home-assistant:stable"
     restart: unless-stopped
     volumes:
@@ -16,24 +16,21 @@ services:
 
   portainer:
     image: portainer/portainer:linux-arm64-2.0.1
-    container_name: Portainer
+    container_name: portainer
     restart: unless-stopped
-    expose:
-      - 8000
-      - 9000
     ports:
-      - "9000:9000"
+      - 9000:9000
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
 
   jellyfin:
     image: linuxserver/jellyfin:latest
-    container_name: Jellyfin
-    restart: always
+    container_name: jellyfin
+    restart: unless-stopped
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
+      PUID: 1000
+      PGID: 1000
+      TZ: Etc/UTC
     volumes:
       - ./data/jellyfin/config:/config
       - /home/orangepi/Downloads/Torrent/Movies:/data/movies
@@ -42,16 +39,16 @@ services:
     devices:
       - /dev/dri:/dev/dri
     ports:
-      - "8000:8096"
+      - 8000:8096
 
   prowlarr:
     image: linuxserver/prowlarr:latest
-    container_name: Prowlarr
-    restart: always
+    container_name: prowlarr
+    restart: unless-stopped
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
+      PUID: 1000
+      PGID: 1000
+      TZ: Etc/UTC
     volumes:
       - ./data/prowlarr/config:/config
     ports:
@@ -59,12 +56,12 @@ services:
 
   radarr:
     image: linuxserver/radarr:latest
-    container_name: Radarr
-    restart: always
+    container_name: radarr
+    restart: unless-stopped
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
+      PUID: 1000
+      PGID: 1000
+      TZ: Etc/UTC
     volumes:
       - ./data/radarr/config:/config
       - /home/orangepi/Downloads/Torrent/Movies:/movies
@@ -75,11 +72,11 @@ services:
   sonarr:
     image: linuxserver/sonarr:latest
     container_name: sonarr
-    restart: always
+    restart: unless-stopped
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
+      PUID: 1000
+      PGID: 1000
+      TZ: Etc/UTC
     volumes:
       - ./data/sonarr/config:/config
       - /home/orangepi/Downloads/Torrent/TV:/tv
@@ -90,10 +87,11 @@ services:
   lidarr:
     image: lscr.io/linuxserver/lidarr:latest
     container_name: lidarr
+    restart: unless-stopped
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
+      PUID: 1000
+      PGID: 1000
+      TZ: Etc/UTC
     volumes:
       - ./data/lidarr/config:/config
       - /home/orangepi/Downloads/Torrent/Music:/music
@@ -105,24 +103,24 @@ services:
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:latest
     container_name: flaresolverr
+    restart: unless-stopped
     environment:
-      - LOG_LEVEL=${LOG_LEVEL:-info}
-      - LOG_HTML=${LOG_HTML:-false}
-      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
-      - TZ=Europe/London
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      LOG_HTML: ${LOG_HTML:-false}
+      CAPTCHA_SOLVER: ${CAPTCHA_SOLVER:-none}
+      TZ: Europe/London
     ports:
       - "${PORT:-8191}:8191"
-    restart: unless-stopped
 
   qbittorrent:
     image: linuxserver/qbittorrent:latest
     container_name: qbittorrent
-    restart: always
+    restart: unless-stopped
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
-      - WEBUI_PORT=8001
+      PUID: 1000
+      PGID: 1000
+      TZ: Etc/UTC
+      WEBUI_PORT: 8001
     volumes:
       - ./data/qbittorrent/config:/config
       - /home/orangepi/Downloads/Torrent:/downloads
@@ -134,6 +132,10 @@ services:
   adguardhome:
     image: adguard/adguardhome
     container_name: adguardhome
+    restart: unless-stopped
+    networks:
+      dns-network:
+        ipv4_address: 172.20.0.200
     volumes:
       - ./data/adguardhome/workdir:/opt/adguardhome/work
       - ./data/adguardhome/confdir:/opt/adguardhome/conf
@@ -152,3 +154,38 @@ services:
       - 8853:8853/udp
       - 5443:5443/tcp
       - 5443:5443/udp
+
+  unbound:
+    container_name: unbound
+    image: madnuttah/unbound:latest
+    hostname: unbound
+    ports:
+      - 5335:5335/tcp
+      - 5335:5335/udp
+    networks:
+      dns-network:
+        ipv4_address: 172.20.0.253
+    environment:
+      TZ: Etc/UTC
+      UNBOUND_UID: 1000
+      UNBOUND_GID: 1000
+      HEALTHCHECK_PORT: 5335
+      EXTENDED_HEALTHCHECK: "true"
+      ENABLE_STATS: "true"
+    restart: unless-stopped
+    healthcheck:
+      test: /usr/local/unbound/sbin/healthcheck.sh
+      interval: 60s
+      retries: 5
+      start_period: 15s
+      timeout: 30s
+
+networks:
+  dns-network:
+    driver: bridge
+    driver_opts:
+      parent: wlan0
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+          gateway: 172.20.0.1
