@@ -1,9 +1,7 @@
-version: "3.8"
-
 services:
   home-assistant:
     container_name: home-assistant
-    image: "ghcr.io/home-assistant/home-assistant:stable"
+    image: "ghcr.io/home-assistant/home-assistant:latest"
     restart: unless-stopped
     volumes:
       - ./data/home-assistant/config:/config
@@ -98,7 +96,6 @@ services:
       - /home/orangepi/Downloads/Torrent/Downloaded:/downloads/Downloaded
     ports:
       - 8686:8686
-    restart: unless-stopped
 
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:latest
@@ -130,7 +127,7 @@ services:
       - 6881:6881/udp
 
   adguardhome:
-    image: adguard/adguardhome
+    image: adguard/adguardhome:latest
     container_name: adguardhome
     restart: unless-stopped
     networks:
@@ -142,18 +139,9 @@ services:
     ports:
       - 53:53/tcp
       - 53:53/udp
-      - 67:67/udp
-      - 68:68/udp
-      - 80:80/tcp
       - 443:443/tcp
       - 443:443/udp
       - 3000:3000/tcp
-      - 853:853/tcp
-      - 784:784/udp
-      - 853:853/udp
-      - 8853:8853/udp
-      - 5443:5443/tcp
-      - 5443:5443/udp
 
   unbound:
     container_name: unbound
