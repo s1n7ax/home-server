@@ -1,7 +1,12 @@
+#--------------------------------------------------------------------#
+#                          Home Automation                           #
+#--------------------------------------------------------------------#
+---
 services:
   home-assistant:
-    container_name: home-assistant
     image: "ghcr.io/home-assistant/home-assistant:latest"
+    container_name: home-assistant
+    env_file: .env
     restart: unless-stopped
     volumes:
       - ./data/home-assistant/config:/config
@@ -9,27 +14,20 @@ services:
       - /run/dbus:/run/dbus:ro
     devices:
       - /dev/serial/by-id/usb-Silicon_Labs_Sonoff_Zigbee_3.0_USB_Dongle_Plus_0001-if00-port0
-    privileged: true
-    network_mode: host
-
-  portainer:
-    image: portainer/portainer:linux-arm64-2.0.1
-    container_name: portainer
-    restart: unless-stopped
     ports:
-      - 9000:9000
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./data/portainer/data:/data
+      - 8123:8123
+    privileged: true
 
+#--------------------------------------------------------------------#
+#                          Media Streaming                           #
+#--------------------------------------------------------------------#
+---
+services:
   jellyfin:
     image: linuxserver/jellyfin:latest
     container_name: jellyfin
+    env_file: .env
     restart: unless-stopped
-    environment:
-      PUID: 1000
-      PGID: 1000
-      TZ: Etc/UTC
     volumes:
       - ./data/jellyfin/config:/config
       - /home/orangepi/Downloads/Torrent/Movies:/data/movies
@@ -43,11 +41,8 @@ services:
   prowlarr:
     image: linuxserver/prowlarr:latest
     container_name: prowlarr
+    env_file: .env
     restart: unless-stopped
-    environment:
-      PUID: 1000
-      PGID: 1000
-      TZ: Etc/UTC
     volumes:
       - ./data/prowlarr/config:/config
     ports:
@@ -56,11 +51,8 @@ services:
   radarr:
     image: linuxserver/radarr:latest
     container_name: radarr
+    env_file: .env
     restart: unless-stopped
-    environment:
-      PUID: 1000
-      PGID: 1000
-      TZ: Etc/UTC
     volumes:
       - ./data/radarr/config:/config
       - /home/orangepi/Downloads/Torrent/Movies:/movies
@@ -71,11 +63,8 @@ services:
   sonarr:
     image: linuxserver/sonarr:latest
     container_name: sonarr
+    env_file: .env
     restart: unless-stopped
-    environment:
-      PUID: 1000
-      PGID: 1000
-      TZ: Etc/UTC
     volumes:
       - ./data/sonarr/config:/config
       - /home/orangepi/Downloads/Torrent/TV:/tv
@@ -86,11 +75,8 @@ services:
   lidarr:
     image: lscr.io/linuxserver/lidarr:latest
     container_name: lidarr
+    env_file: .env
     restart: unless-stopped
-    environment:
-      PUID: 1000
-      PGID: 1000
-      TZ: Etc/UTC
     volumes:
       - ./data/lidarr/config:/config
       - /home/orangepi/Downloads/Torrent/Music:/music
@@ -101,6 +87,7 @@ services:
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:latest
     container_name: flaresolverr
+    env_file: .env
     restart: unless-stopped
     environment:
       LOG_LEVEL: ${LOG_LEVEL:-info}
@@ -108,16 +95,14 @@ services:
       CAPTCHA_SOLVER: ${CAPTCHA_SOLVER:-none}
       TZ: Europe/London
     ports:
-      - "${PORT:-8191}:8191"
+      - 8191:8191
 
   qbittorrent:
     image: linuxserver/qbittorrent:latest
     container_name: qbittorrent
+    env_file: .env
     restart: unless-stopped
     environment:
-      PUID: 1000
-      PGID: 1000
-      TZ: Etc/UTC
       WEBUI_PORT: 8001
     volumes:
       - ./data/qbittorrent/config:/config
@@ -127,9 +112,15 @@ services:
       - 6881:6881
       - 6881:6881/udp
 
+#--------------------------------------------------------------------#
+#                             DNS Server                             #
+#--------------------------------------------------------------------#
+---
+services:
   adguardhome:
     image: adguard/adguardhome:latest
     container_name: adguardhome
+    env_file: .env
     restart: unless-stopped
     networks:
       dns-network:
@@ -145,8 +136,9 @@ services:
       - 3000:3000/tcp
 
   unbound:
-    container_name: unbound
     image: madnuttah/unbound:latest
+    container_name: unbound
+    env_file: .env
     hostname: unbound
     ports:
       - 5335:5335/tcp
@@ -155,7 +147,6 @@ services:
       dns-network:
         ipv4_address: 172.20.0.253
     environment:
-      TZ: Etc/UTC
       UNBOUND_UID: 1000
       UNBOUND_GID: 1000
       HEALTHCHECK_PORT: 5335
@@ -187,16 +178,19 @@ services:
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
+    user: "${UID:-1000}:${GID:-1000}"
+    env_file: .env
     ports:
       - 3001:3000
     volumes:
       - ./data/grafana/config:/var/lib/grafana
     restart: unless-stopped
-    user: 1000:1000
 
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
+    user: "${UID:-1000}:${GID:-1000}"
+    env_file: .env
     command: "--config.file=/etc/prometheus/prometheus.yml"
     volumes:
       - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
@@ -204,7 +198,6 @@ services:
     restart: unless-stopped
     ports:
       - 9090:9090
-    user: 1000:1000
     depends_on:
       - node-exporter
       - cadvisor
@@ -212,6 +205,7 @@ services:
   node-exporter:
     image: prom/node-exporter:latest
     container_name: node-exporter
+    env_file: .env
     restart: unless-stopped
     volumes:
       - /proc:/host/proc:ro
@@ -228,6 +222,7 @@ services:
   cadvisor:
     image: gcr.io/cadvisor/cadvisor
     container_name: cadvisor
+    env_file: .env
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:ro
@@ -236,3 +231,19 @@ services:
       - /dev/disk/:/dev/disk:ro
     devices:
       - /dev/kmsg
+
+#--------------------------------------------------------------------#
+#                        Container Management                        #
+#--------------------------------------------------------------------#
+---
+services:
+  portainer:
+    image: portainer/portainer:linux-arm64-2.0.1
+    container_name: portainer
+    env_file: .env
+    restart: unless-stopped
+    ports:
+      - 9000:9000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data/portainer/data:/data
