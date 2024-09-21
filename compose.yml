@@ -30,9 +30,9 @@ services:
     restart: unless-stopped
     volumes:
       - ./data/jellyfin/config:/config
-      - /home/orangepi/Downloads/Torrent/Movies:/data/movies
-      - /home/orangepi/Downloads/Torrent/TV:/data/tv
-      - /home/orangepi/Downloads/Torrent/Music:/data/music
+      - /home/s1n7ax/Downloads/Torrent/Movies:/data/movies
+      - /home/s1n7ax/Downloads/Torrent/TV:/data/tv
+      - /home/s1n7ax/Downloads/Torrent/Music:/data/music
     devices:
       - /dev/dri:/dev/dri
     ports:
@@ -55,8 +55,8 @@ services:
     restart: unless-stopped
     volumes:
       - ./data/radarr/config:/config
-      - /home/orangepi/Downloads/Torrent/Movies:/movies
-      - /home/orangepi/Downloads/Torrent/Downloaded:/downloads/Downloaded
+      - /home/s1n7ax/Downloads/Torrent/Movies:/movies
+      - /home/s1n7ax/Downloads/Torrent/Downloaded:/downloads/Downloaded
     ports:
       - 7878:7878
 
@@ -67,8 +67,8 @@ services:
     restart: unless-stopped
     volumes:
       - ./data/sonarr/config:/config
-      - /home/orangepi/Downloads/Torrent/TV:/tv
-      - /home/orangepi/Downloads/Torrent/Downloaded:/downloads/Downloaded
+      - /home/s1n7ax/Downloads/Torrent/TV:/tv
+      - /home/s1n7ax/Downloads/Torrent/Downloaded:/downloads/Downloaded
     ports:
       - 8989:8989
 
@@ -79,8 +79,8 @@ services:
     restart: unless-stopped
     volumes:
       - ./data/lidarr/config:/config
-      - /home/orangepi/Downloads/Torrent/Music:/music
-      - /home/orangepi/Downloads/Torrent/Downloaded:/downloads/Downloaded
+      - /home/s1n7ax/Downloads/Torrent/Music:/music
+      - /home/s1n7ax/Downloads/Torrent/Downloaded:/downloads/Downloaded
     ports:
       - 8686:8686
 
@@ -106,7 +106,7 @@ services:
       WEBUI_PORT: 8001
     volumes:
       - ./data/qbittorrent/config:/config
-      - /home/orangepi/Downloads/Torrent:/downloads
+      - /home/s1n7ax/Downloads/Torrent:/downloads
     ports:
       - 8001:8001
       - 6881:6881
