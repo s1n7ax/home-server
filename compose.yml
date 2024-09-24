@@ -124,11 +124,11 @@ services:
     restart: unless-stopped
     networks:
       dns-network:
-        ipv4_address: 172.20.0.200
+        ipv4_address: 192.168.1.200
     volumes:
       - ./data/adguardhome/workdir:/opt/adguardhome/work
       - ./data/adguardhome/confdir:/opt/adguardhome/conf
-    ports:
+    expose:
       - 53:53/tcp
       - 53:53/udp
       - 443:443/tcp
@@ -145,7 +145,7 @@ services:
       - 5335:5335/udp
     networks:
       dns-network:
-        ipv4_address: 172.20.0.253
+        ipv4_address: 192.168.1.201
     environment:
       UNBOUND_UID: 1000
       UNBOUND_GID: 1000
@@ -162,13 +162,14 @@ services:
 
 networks:
   dns-network:
-    driver: bridge
+    driver: ipvlan
     driver_opts:
-      parent: wlan0
+      parent: wlP2p33s0
     ipam:
       config:
-        - subnet: 172.20.0.0/24
-          gateway: 172.20.0.1
+        - subnet: 192.168.1.0/24
+          gateway: 192.168.1.1
+          ip_range: 192.168.1.253/32
 
 #--------------------------------------------------------------------#
 #                             Monitoring                             #
