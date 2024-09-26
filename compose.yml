@@ -135,31 +135,6 @@ services:
       - 443:443/udp
       - 3000:3000/tcp
 
-  unbound:
-    image: madnuttah/unbound:latest
-    container_name: unbound
-    env_file: .env
-    hostname: unbound
-    ports:
-      - 5335:5335/tcp
-      - 5335:5335/udp
-    networks:
-      dns-network:
-        ipv4_address: 192.168.1.201
-    environment:
-      UNBOUND_UID: 1000
-      UNBOUND_GID: 1000
-      HEALTHCHECK_PORT: 5335
-      EXTENDED_HEALTHCHECK: "true"
-      ENABLE_STATS: "true"
-    restart: unless-stopped
-    healthcheck:
-      test: /usr/local/unbound/sbin/healthcheck.sh
-      interval: 60s
-      retries: 5
-      start_period: 15s
-      timeout: 30s
-
 networks:
   dns-network:
     driver: ipvlan
@@ -248,3 +223,31 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./data/portainer/data:/data
+
+#--------------------------------------------------------------------#
+#                               Tunnel                               #
+#--------------------------------------------------------------------#
+---
+services:
+  wireguard:
+    image: lscr.io/linuxserver/wireguard:latest
+    container_name: wireguard
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE #optional
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      # - SERVERURL=wireguard.domain.com #optional
+      - SERVERPORT=51820 #optional
+      - PEERS=1 #optional
+      - INTERNAL_SUBNET=10.0.0.0 #optional
+      - ALLOWEDIPS=10.0.0.0/24 #optional
+    volumes:
+      - ./data/wireguard/config:/config
+    ports:
+      - 51820:51820/udp
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    restart: unless-stopped
