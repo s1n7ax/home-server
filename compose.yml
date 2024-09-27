@@ -8,6 +8,8 @@ services:
     container_name: home-assistant
     env_file: .env
     restart: unless-stopped
+    networks:
+      - home-assistant-network
     volumes:
       - ./data/home-assistant/config:/config
       - /etc/localtime:/etc/localtime:ro
@@ -17,6 +19,9 @@ services:
     ports:
       - 8123:8123
     privileged: true
+networks:
+  home-assistant-network:
+    driver: bridge
 
 #--------------------------------------------------------------------#
 #                          Media Streaming                           #
@@ -223,31 +228,31 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./data/portainer/data:/data
-
+---
 #--------------------------------------------------------------------#
 #                               Tunnel                               #
 #--------------------------------------------------------------------#
----
 services:
   wireguard:
-    image: lscr.io/linuxserver/wireguard:latest
+    build: ./docker/wireguard
     container_name: wireguard
+    networks:
+      - wireguard-network
+      - home-assistant-network
     cap_add:
       - NET_ADMIN
       - SYS_MODULE #optional
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
-      # - SERVERURL=wireguard.domain.com #optional
-      - SERVERPORT=51820 #optional
-      - PEERS=1 #optional
-      - INTERNAL_SUBNET=10.0.0.0 #optional
-      - ALLOWEDIPS=10.0.0.0/24 #optional
+    env_file: .env
     volumes:
-      - ./data/wireguard/config:/config
+      - ./data/wireguard:/etc/wireguard
+      - ./config/wireguard/nginx.conf:/etc/nginx/nginx.conf
+      - ./config/wireguard/html:/var/www/html
     ports:
+      - 80:80
       - 51820:51820/udp
     sysctls:
       - net.ipv4.conf.all.src_valid_mark=1
     restart: unless-stopped
+networks:
+  wireguard-network:
+    driver: bridge
