@@ -1,7 +1,7 @@
+---
 #--------------------------------------------------------------------#
 #                          Home Automation                           #
 #--------------------------------------------------------------------#
----
 services:
   home-assistant:
     image: "ghcr.io/home-assistant/home-assistant:latest"
@@ -23,15 +23,17 @@ networks:
   home-assistant-network:
     driver: bridge
 
+---
 #--------------------------------------------------------------------#
 #                          Media Streaming                           #
 #--------------------------------------------------------------------#
----
 services:
   jellyfin:
     image: linuxserver/jellyfin:latest
     container_name: jellyfin
     env_file: .env
+    networks:
+      - media-network
     restart: unless-stopped
     volumes:
       - ./data/jellyfin/config:/config
@@ -47,6 +49,8 @@ services:
     image: linuxserver/prowlarr:latest
     container_name: prowlarr
     env_file: .env
+    networks:
+      - media-network
     restart: unless-stopped
     volumes:
       - ./data/prowlarr/config:/config
@@ -58,6 +62,8 @@ services:
     container_name: radarr
     env_file: .env
     restart: unless-stopped
+    networks:
+      - media-network
     volumes:
       - ./data/radarr/config:/config
       - /home/s1n7ax/Downloads/Torrent/Movies:/movies
@@ -69,6 +75,8 @@ services:
     image: linuxserver/sonarr:latest
     container_name: sonarr
     env_file: .env
+    networks:
+      - media-network
     restart: unless-stopped
     volumes:
       - ./data/sonarr/config:/config
@@ -81,6 +89,8 @@ services:
     image: lscr.io/linuxserver/lidarr:latest
     container_name: lidarr
     env_file: .env
+    networks:
+      - media-network
     restart: unless-stopped
     volumes:
       - ./data/lidarr/config:/config
@@ -93,6 +103,8 @@ services:
     image: ghcr.io/flaresolverr/flaresolverr:latest
     container_name: flaresolverr
     env_file: .env
+    networks:
+      - media-network
     restart: unless-stopped
     environment:
       LOG_LEVEL: ${LOG_LEVEL:-info}
@@ -106,6 +118,8 @@ services:
     image: linuxserver/qbittorrent:latest
     container_name: qbittorrent
     env_file: .env
+    networks:
+      - media-network
     restart: unless-stopped
     environment:
       WEBUI_PORT: 8001
@@ -116,11 +130,14 @@ services:
       - 8001:8001
       - 6881:6881
       - 6881:6881/udp
+networks:
+  media-network:
+    driver: bridge
 
+---
 #--------------------------------------------------------------------#
 #                             DNS Server                             #
 #--------------------------------------------------------------------#
----
 services:
   adguardhome:
     image: adguard/adguardhome:latest
@@ -151,10 +168,10 @@ networks:
           gateway: 192.168.1.1
           ip_range: 192.168.1.253/32
 
+---
 #--------------------------------------------------------------------#
 #                             Monitoring                             #
 #--------------------------------------------------------------------#
----
 services:
   grafana:
     image: grafana/grafana:latest
@@ -213,10 +230,10 @@ services:
     devices:
       - /dev/kmsg
 
+---
 #--------------------------------------------------------------------#
 #                        Container Management                        #
 #--------------------------------------------------------------------#
----
 services:
   portainer:
     image: portainer/portainer:linux-arm64-2.0.1
@@ -228,6 +245,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./data/portainer/data:/data
+
 ---
 #--------------------------------------------------------------------#
 #                               Tunnel                               #
