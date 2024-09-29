@@ -64,6 +64,7 @@ services:
     restart: unless-stopped
     networks:
       - media-network
+      - home-assistant-network
     volumes:
       - ./data/radarr/config:/config
       - /home/s1n7ax/Downloads/Torrent/Movies:/movies
@@ -120,6 +121,7 @@ services:
     env_file: .env
     networks:
       - media-network
+      - home-assistant-network
     restart: unless-stopped
     environment:
       WEBUI_PORT: 8001
