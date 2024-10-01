@@ -147,12 +147,11 @@ services:
     env_file: .env
     restart: unless-stopped
     networks:
-      dns-network:
-        ipv4_address: 192.168.1.200
+      - dns-network
     volumes:
       - ./data/adguardhome/workdir:/opt/adguardhome/work
       - ./data/adguardhome/confdir:/opt/adguardhome/conf
-    expose:
+    ports:
       - 53:53/tcp
       - 53:53/udp
       - 443:443/tcp
@@ -161,14 +160,7 @@ services:
 
 networks:
   dns-network:
-    driver: ipvlan
-    driver_opts:
-      parent: wlP2p33s0
-    ipam:
-      config:
-        - subnet: 192.168.1.0/24
-          gateway: 192.168.1.1
-          ip_range: 192.168.1.253/32
+    driver: bridge
 
 ---
 #--------------------------------------------------------------------#
