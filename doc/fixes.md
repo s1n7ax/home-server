@@ -12,5 +12,9 @@
 By default DNS loopback server is running on port 53. So that has to be stopped
 to run AdGuard Home.
 
-- `sudo systemctl disable --now systemd-resolved`
+```sh
+# /etc/systemd/resolved.conf
 
+# uncomment DNSStubListener=yes and set it to no
+DNSStubListener=no
+```
