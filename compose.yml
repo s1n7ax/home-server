@@ -295,7 +295,10 @@ services:
   wireguard:
     build: ./docker/wireguard
     container_name: wireguard
+    dns:
+      - 172.20.0.201
     networks:
+      - dns-network
       - wireguard-network
       - home-assistant-network
     cap_add:
