@@ -183,8 +183,7 @@ services:
     container_name: unbound
     restart: unless-stopped
     dns:
-      - 1.1.1.2
-      - 1.0.0.2
+      - 172.20.0.201
     networks:
       dns-network:
         ipv4_address: 172.20.0.200
