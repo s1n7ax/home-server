@@ -14,11 +14,37 @@ services:
       - ./data/home-assistant/config:/config
       - /etc/localtime:/etc/localtime:ro
       - /run/dbus:/run/dbus:ro
-    devices:
-      - /dev/serial/by-id/usb-Silicon_Labs_Sonoff_Zigbee_3.0_USB_Dongle_Plus_0001-if00-port0
     ports:
       - 8123:8123
-    privileged: true
+
+  mqtt:
+    image: eclipse-mosquitto:2.0
+    container_name: mqtt
+    networks:
+      - home-assistant-network
+    restart: unless-stopped
+    volumes:
+      - "./data/mosquitto/data:/mosquitto"
+    expose:
+      - "1883:1883"
+      - "9001:9001"
+    command: "mosquitto -c /mosquitto-no-auth.conf"
+
+  zigbee2mqtt:
+    image: koenkk/zigbee2mqtt
+    container_name: zigbee2mqtt
+    networks:
+      - home-assistant-network
+    restart: unless-stopped
+    volumes:
+      - ./data/zigbee2mqtt/data:/app/data
+      - /run/udev:/run/udev:ro
+    ports:
+      - 8080:8080
+    env_file: .env
+    devices:
+      - /dev/ttyUSB0
+
 networks:
   home-assistant-network:
     driver: bridge
