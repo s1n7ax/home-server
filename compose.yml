@@ -45,7 +45,7 @@ services:
     ports:
       - 8080:8080
     devices:
-      - /dev/ttyUSB0
+      - /dev/serial/by-id/usb-Silicon_Labs_Sonoff_Zigbee_3.0_USB_Dongle_Plus_0001-if00-port0:/dev/ttyUSB0
 
 networks:
   home-assistant-network:
@@ -78,7 +78,7 @@ services:
     container_name: prowlarr
     env_file: .env
     dns:
-      - 172.20.0.201
+      - 172.16.0.201
     networks:
       - media-network
       - dns-network
@@ -94,7 +94,7 @@ services:
     env_file: .env
     restart: unless-stopped
     dns:
-      - 172.20.0.201
+      - 172.16.0.201
     networks:
       - media-network
       - dns-network
@@ -111,7 +111,7 @@ services:
     container_name: sonarr
     env_file: .env
     dns:
-      - 172.20.0.201
+      - 172.16.0.201
     networks:
       - media-network
       - dns-network
@@ -128,7 +128,7 @@ services:
     container_name: lidarr
     env_file: .env
     dns:
-      - 172.20.0.201
+      - 172.16.0.201
     networks:
       - media-network
       - dns-network
@@ -145,7 +145,7 @@ services:
     container_name: flaresolverr
     env_file: .env
     dns:
-      - 172.20.0.201
+      - 172.16.0.201
     networks:
       - media-network
       - dns-network
@@ -163,7 +163,7 @@ services:
     container_name: qbittorrent
     env_file: .env
     dns:
-      - 172.20.0.201
+      - 172.16.0.201
     networks:
       - media-network
       - dns-network
@@ -194,7 +194,7 @@ services:
     restart: unless-stopped
     networks:
       dns-network:
-        ipv4_address: 172.20.0.201
+        ipv4_address: 172.16.0.201
     volumes:
       - ./data/adguardhome/workdir:/opt/adguardhome/work
       - ./data/adguardhome/confdir:/opt/adguardhome/conf
@@ -212,10 +212,10 @@ services:
     env_file: .env
     restart: unless-stopped
     dns:
-      - 172.20.0.201
+      - 172.16.0.201
     networks:
       dns-network:
-        ipv4_address: 172.20.0.200
+        ipv4_address: 172.16.0.200
     cap_add:
       - NET_ADMIN
     expose:
@@ -231,8 +231,8 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: 172.20.0.0/24
-          gateway: 172.20.0.1
+        - subnet: 172.16.0.0/24
+          gateway: 172.16.0.1
 
 ---
 #--------------------------------------------------------------------#
@@ -322,7 +322,7 @@ services:
     container_name: wireguard
     env_file: .env
     dns:
-      - 172.20.0.201
+      - 172.16.0.201
     networks:
       - dns-network
       - wireguard-network
