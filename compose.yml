@@ -8,6 +8,8 @@ services:
     container_name: home-assistant
     env_file: .env
     restart: unless-stopped
+    dns:
+      - 172.16.0.201
     networks:
       - home-assistant-network
       - dns-network
