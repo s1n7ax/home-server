@@ -39,7 +39,27 @@ devices:
     friendly_name: b office srinesh's desk
   '0xa4c1384a42188985':
     friendly_name: b office nidu's desk
+  '0x881a14fffe02f01b':
+    friendly_name: z living room router
   '0x70b3d52b600ba845':
-    friendly_name: '0x70b3d52b600ba845'
+    friendly_name: 'p refrigerator '
   '0x70b3d52b600a5ec7':
     friendly_name: p water pump
+  '0xa4c138baa16fea07':
+    friendly_name: b hallway bathroom door
+  '0xa4c1388369e9b27a':
+    friendly_name: b thaththa’s room
+  '0xa4c138800890f671':
+    friendly_name: b bathroom commode
+  '0xa4c1388ba7f2418e':
+    friendly_name: b bathroom shower
+  '0xa4c13847b96e37ad':
+    friendly_name: b house front car side
+  '0xa4c138258b4fa796':
+    friendly_name: b house front door side
+  '0xa4c138bb2e28e70b':
+    friendly_name: b bed room
+  '0xb40ecfd03d0f0000':
+    friendly_name: b backyard roof side
+  '0xa4c1389ac7ce63fc':
+    friendly_name: ds dry box
