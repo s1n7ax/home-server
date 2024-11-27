@@ -290,7 +290,7 @@ services:
       - 9100
 
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor
+    image: gcr.io/cadvisor/cadvisor:latest
     container_name: cadvisor
     env_file: .env
     volumes:
@@ -303,12 +303,12 @@ services:
       - /dev/kmsg
 
 ---
-#--------------------------------------------------------------------#
+# --------------------------------------------------------------------#
 #                        Container Management                        #
-#--------------------------------------------------------------------#
+# --------------------------------------------------------------------#
 services:
   portainer:
-    image: portainer/portainer:linux-arm64-2.0.1
+    image: portainer/portainer-ce:linux-arm64
     container_name: portainer
     env_file: .env
     restart: unless-stopped
