@@ -62,8 +62,11 @@ services:
     image: linuxserver/jellyfin:latest
     container_name: jellyfin
     env_file: .env
+    dns:
+      - 172.16.0.201
     networks:
       - media-network
+      - dns-network
     restart: unless-stopped
     volumes:
       - ./data/jellyfin/config:/config
