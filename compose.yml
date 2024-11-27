@@ -14,6 +14,7 @@ services:
       - home-assistant-network
       - dns-network
     volumes:
+      - ./config/home-assistant/configuration.yaml:/config/configuration.yaml
       - ./data/home-assistant/config:/config
       - /etc/localtime:/etc/localtime:ro
       - /run/dbus:/run/dbus:ro
@@ -42,6 +43,7 @@ services:
       - home-assistant-network
     restart: unless-stopped
     volumes:
+      - ./config/zigbee2mqtt/configuration.yaml:/app/data/configuration.yaml
       - ./data/zigbee2mqtt/data:/app/data
       - /run/udev:/run/udev:ro
     ports:
@@ -290,7 +292,7 @@ services:
       - 9100
 
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor:latest
+    image: google/cadvisor:latest
     container_name: cadvisor
     env_file: .env
     volumes:
