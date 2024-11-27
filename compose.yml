@@ -59,7 +59,7 @@ networks:
 #--------------------------------------------------------------------#
 services:
   jellyfin:
-    image: linuxserver/jellyfin:latest
+    image: lscr.io/linuxserver/jellyfin:latest
     container_name: jellyfin
     env_file: .env
     dns:
@@ -79,7 +79,7 @@ services:
       - 8000:8096
 
   prowlarr:
-    image: linuxserver/prowlarr:latest
+    image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
     env_file: .env
     dns:
@@ -94,7 +94,7 @@ services:
       - 9696:9696
 
   radarr:
-    image: linuxserver/radarr:latest
+    image: lscr.io/linuxserver/radarr:latest
     container_name: radarr
     env_file: .env
     restart: unless-stopped
@@ -112,7 +112,7 @@ services:
       - 7878:7878
 
   sonarr:
-    image: linuxserver/sonarr:latest
+    image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
     env_file: .env
     dns:
@@ -164,7 +164,7 @@ services:
       - 8191:8191
 
   qbittorrent:
-    image: linuxserver/qbittorrent:latest
+    image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
     env_file: .env
     dns:
@@ -273,7 +273,7 @@ services:
       - cadvisor
 
   node-exporter:
-    image: prom/node-exporter:latest
+    image: quay.io/prometheus/node-exporter:latest
     container_name: node-exporter
     env_file: .env
     restart: unless-stopped
@@ -308,7 +308,7 @@ services:
 # --------------------------------------------------------------------#
 services:
   portainer:
-    image: portainer/portainer-ce:linux-arm64
+    image: portainer/portainer-ce:lts
     container_name: portainer
     env_file: .env
     restart: unless-stopped
