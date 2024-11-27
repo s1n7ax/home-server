@@ -8,7 +8,7 @@ serial:
 frontend:
   port: 8080
 advanced:
-  pan_id: 6755
+  pan_id: 6757
   ext_pan_id:
     - 221
     - 221
@@ -19,33 +19,27 @@ advanced:
     - 221
     - 221
   channel: 11
-  network_key:
-    - 69
-    - 53
-    - 230
-    - 32
-    - 67
-    - 176
-    - 39
-    - 220
-    - 32
-    - 132
-    - 83
-    - 129
-    - 153
-    - 16
-    - 93
-    - 155
+  network_key: '!secret.yaml network_key'
   homeassistant_legacy_entity_attributes: false
   legacy_api: false
   legacy_availability_payload: false
 device_options:
   legacy: false
-devices:
-  '0x70b3d52b600ba845':
-    friendly_name: p test
 availability:
   active:
     timeout: 5
   passive:
     timeout: 1500
+devices:
+  '0x70b3d52b600a5ec6':
+    friendly_name: p computer
+  '0xa4c1386bd71e3654':
+    friendly_name: p ac
+  '0xa4c138971e946b01':
+    friendly_name: b office srinesh's desk
+  '0xa4c1384a42188985':
+    friendly_name: b office nidu's desk
+  '0x70b3d52b600ba845':
+    friendly_name: '0x70b3d52b600ba845'
+  '0x70b3d52b600a5ec7':
+    friendly_name: p water pump

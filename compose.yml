@@ -14,7 +14,6 @@ services:
       - home-assistant-network
       - dns-network
     volumes:
-      - ./config/home-assistant/configuration.yaml:/config/configuration.yaml
       - ./data/home-assistant/config:/config
       - /etc/localtime:/etc/localtime:ro
       - /run/dbus:/run/dbus:ro
@@ -43,8 +42,8 @@ services:
       - home-assistant-network
     restart: unless-stopped
     volumes:
-      - ./config/zigbee2mqtt/configuration.yaml:/app/data/configuration.yaml
       - ./data/zigbee2mqtt/data:/app/data
+      - ./config/zigbee2mqtt/configuration.yaml:/app/data/configuration.yaml
       - /run/udev:/run/udev:ro
     ports:
       - 8080:8080
