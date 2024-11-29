@@ -8,6 +8,7 @@ services:
     container_name: home-assistant
     env_file: .env
     restart: unless-stopped
+    privileged: true
     dns:
       - 172.16.0.201
     networks:
@@ -35,7 +36,7 @@ services:
     command: "mosquitto -c /mosquitto-no-auth.conf"
 
   zigbee2mqtt:
-    image: koenkk/zigbee2mqtt:latest
+    image: koenkk/zigbee2mqtt
     container_name: zigbee2mqtt
     env_file: .env
     networks:
@@ -291,7 +292,7 @@ services:
       - 9100
 
   cadvisor:
-    image: google/cadvisor:latest
+    image: gcr.io/cadvisor/cadvisor
     container_name: cadvisor
     env_file: .env
     volumes:

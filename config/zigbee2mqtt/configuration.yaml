@@ -63,3 +63,27 @@ devices:
     friendly_name: b backyard roof side
   '0xa4c1389ac7ce63fc':
     friendly_name: ds dry box
+  '0xa4c1388bf4240e18':
+    friendly_name: ms living room hallway side
+  '0xa4c1384a46f713ce':
+    friendly_name: ms living room door side
+  '0xa4c1389b5be72278':
+    friendly_name: ms hallway living room side
+  '0x842712fffe7376f7':
+    friendly_name: ms hallway kitchen door side
+  '0xa4c1383c52d13251':
+    friendly_name: ms bathroom door
+  '0xa4c138b9dc5a6ac9':
+    friendly_name: ms bathroom commode
+  '0xa4c1385fb0fcb70e':
+    friendly_name: ms bathroom sink
+  '0xa4c1389123ec4c06':
+    friendly_name: 'ms stairs '
+  '0xa4c13876ce0b9643':
+    friendly_name: ms bathroom shower
+  '0xa4c138974f5cbbcc':
+    friendly_name: ms thaththa’s room
+  '0xa4c138dfad496853':
+    friendly_name: ms bedroom
+  '0x7cc6b6fffe399d67':
+    friendly_name: sw living room sofa side
