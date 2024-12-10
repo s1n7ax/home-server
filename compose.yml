@@ -39,6 +39,7 @@ services:
     image: koenkk/zigbee2mqtt
     container_name: zigbee2mqtt
     env_file: .env
+    restart: always
     networks:
       - home-assistant-network
     volumes:
@@ -295,8 +296,8 @@ services:
     container_name: cadvisor
     env_file: .env
     command:
-      - '-housekeeping_interval=10s'
-      - '-docker_only=true'
+      - "-housekeeping_interval=10s"
+      - "-docker_only=true"
     security_opt:
       - no-new-privileges:true
     volumes:

@@ -5,9 +5,14 @@ mqtt:
   server: mqtt://mqtt
 serial:
   port: /dev/ttyUSB0
+  baudrate: 115200
+  adapter: zstack
+  disable_led: false
 frontend:
   port: 8080
 advanced:
+  log_level: debug
+  transmit_power: 20
   pan_id: 6757
   ext_pan_id:
     - 221
@@ -19,7 +24,7 @@ advanced:
     - 221
     - 221
   channel: 11
-  network_key: '!secret.yaml network_key'
+  network_key: "!secret.yaml network_key"
   homeassistant_legacy_entity_attributes: false
   legacy_api: false
   legacy_availability_payload: false
@@ -31,59 +36,73 @@ availability:
   passive:
     timeout: 1500
 devices:
-  '0x70b3d52b600a5ec6':
+  "0x70b3d52b600a5ec6":
     friendly_name: p computer
-  '0xa4c1386bd71e3654':
+  "0xa4c1386bd71e3654":
     friendly_name: p ac
-  '0xa4c138971e946b01':
+  "0xa4c138971e946b01":
     friendly_name: b office srinesh's desk
-  '0xa4c1384a42188985':
+  "0xa4c1384a42188985":
     friendly_name: b office nidu's desk
-  '0x881a14fffe02f01b':
+  "0x881a14fffe02f01b":
     friendly_name: z living room router
-  '0x70b3d52b600ba845':
-    friendly_name: 'p refrigerator '
-  '0x70b3d52b600a5ec7':
+  "0x70b3d52b600ba845":
+    friendly_name: "p refrigerator "
+  "0x70b3d52b600a5ec7":
     friendly_name: p water pump
-  '0xa4c138baa16fea07':
+  "0xa4c138baa16fea07":
     friendly_name: b hallway bathroom door
-  '0xa4c1388369e9b27a':
+  "0xa4c1388369e9b27a":
     friendly_name: b thaththa’s room
-  '0xa4c138800890f671':
+  "0xa4c138800890f671":
     friendly_name: b bathroom commode
-  '0xa4c1388ba7f2418e':
+  "0xa4c1388ba7f2418e":
     friendly_name: b bathroom shower
-  '0xa4c13847b96e37ad':
+  "0xa4c13847b96e37ad":
     friendly_name: b house front car side
-  '0xa4c138258b4fa796':
+  "0xa4c138258b4fa796":
     friendly_name: b house front door side
-  '0xa4c138bb2e28e70b':
-    friendly_name: b bed room
-  '0xb40ecfd03d0f0000':
+  "0xa4c138bb2e28e70b":
+    friendly_name: b bedroom
+  "0xb40ecfd03d0f0000":
     friendly_name: b backyard roof side
-  '0xa4c1389ac7ce63fc':
+  "0xa4c1389ac7ce63fc":
     friendly_name: ds dry box
-  '0xa4c1388bf4240e18':
+  "0xa4c1388bf4240e18":
     friendly_name: ms living room hallway side
-  '0xa4c1384a46f713ce':
+  "0xa4c1384a46f713ce":
     friendly_name: ms living room door side
-  '0xa4c1389b5be72278':
+  "0xa4c1389b5be72278":
     friendly_name: ms hallway living room side
-  '0x842712fffe7376f7':
+  "0x842712fffe7376f7":
     friendly_name: ms hallway kitchen door side
-  '0xa4c1383c52d13251':
+  "0xa4c1383c52d13251":
     friendly_name: ms bathroom door
-  '0xa4c138b9dc5a6ac9':
+  "0xa4c138b9dc5a6ac9":
     friendly_name: ms bathroom commode
-  '0xa4c1385fb0fcb70e':
+  "0xa4c1385fb0fcb70e":
     friendly_name: ms bathroom sink
-  '0xa4c1389123ec4c06':
-    friendly_name: 'ms stairs '
-  '0xa4c13876ce0b9643':
+  "0xa4c1389123ec4c06":
+    friendly_name: "ms stairs "
+  "0xa4c13876ce0b9643":
     friendly_name: ms bathroom shower
-  '0xa4c138974f5cbbcc':
+  "0xa4c138974f5cbbcc":
     friendly_name: ms thaththa’s room
-  '0xa4c138dfad496853':
-    friendly_name: ms bedroom
-  '0x7cc6b6fffe399d67':
+  "0xa4c138dfad496853":
+    friendly_name: ms bedroom door
+  "0x7cc6b6fffe399d67":
     friendly_name: sw living room sofa side
+  "0xa4c1384ff790746d":
+    friendly_name: ms backyard shower
+  "0x28dba7fffe753b3a":
+    friendly_name: f water tank
+  "0xa4c138947ae2a622":
+    friendly_name: ms roof ac side
+  "0xa4c13830c4b2fc3d":
+    friendly_name: ms roof computer room window
+  "0xa4c1387684357147":
+    friendly_name: ms roof bedroom window
+  "0xa4c1383d5d39c52c":
+    friendly_name: ms bedroom
+  "0xa4c13860d61135da":
+    friendly_name: ms kitchen door
