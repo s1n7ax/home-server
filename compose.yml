@@ -8,12 +8,12 @@ services:
     container_name: home-assistant
     env_file: .env
     restart: unless-stopped
-    privileged: true
     dns:
       - 172.16.0.201
     networks:
       - home-assistant-network
       - dns-network
+    privileged: true
     volumes:
       - ./data/home-assistant/config:/config
       - /etc/localtime:/etc/localtime:ro
@@ -41,7 +41,6 @@ services:
     env_file: .env
     networks:
       - home-assistant-network
-    restart: unless-stopped
     volumes:
       - ./data/zigbee2mqtt/data:/app/data
       - ./config/zigbee2mqtt/configuration.yaml:/app/data/configuration.yaml
@@ -295,12 +294,18 @@ services:
     image: gcr.io/cadvisor/cadvisor
     container_name: cadvisor
     env_file: .env
+    command:
+      - '-housekeeping_interval=10s'
+      - '-docker_only=true'
+    security_opt:
+      - no-new-privileges:true
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:ro
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
       - /dev/disk/:/dev/disk:ro
+      - /etc/machine-id:/etc/machine-id:ro
     devices:
       - /dev/kmsg
 
